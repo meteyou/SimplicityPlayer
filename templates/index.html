@@ -1,0 +1,24 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MPD Song Management</title>
+</head>
+<body>
+    <h1>MPD Song Management</h1>
+
+    <!-- Formular zum Hinzufügen eines Songs -->
+    <form method="POST" action="/add">
+        <input type="text" name="tag_id" placeholder="Tag ID" required>
+        <input type="text" name="song_name" placeholder="Song Name" required>
+        <button type="submit">Add Song</button>
+    </form>
+
+    <!-- Liste der Songs -->
+    <ul>
+        {% for song in songs %}
+        <li>{{ song.tag_id }}: {{ song.song_name }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
