@@ -6,8 +6,8 @@ from modules.RFIDModule import RFIDModule
 from modules.LCDModule import LCDModule
 from modules.MPDModule import MPDModule
 #from modules.DatabaseModule import DatabaseModule
-#from modules.WebServerModule import run_server
-#from threading import Thread
+from modules.WebServerModule import WebServerModule
+from threading import Thread
 
 def main():
     config = configparser.ConfigParser()
@@ -26,9 +26,11 @@ def main():
     lcd = LCDModule(config)
     #db = DatabaseModule(db_path='path_to_your_database.db')
 
+
     # start the web server in a separate thread
-    #server_thread = Thread(target=run_server)
-    #server_thread.start()
+    web_server = WebServerModule(config)
+    web_server_thread = Thread(target=web_server.run)
+    web_server_thread.start()
 
     try:
         while True:

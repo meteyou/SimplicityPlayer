@@ -1,24 +1,63 @@
-<!-- templates/index.html -->
-<!DOCTYPE html>
-<html>
-<head>
-    <title>MPD Song Management</title>
-</head>
-<body>
-    <h1>MPD Song Management</h1>
+{% extends "base.html" %}
 
-    <!-- Formular zum Hinzufügen eines Songs -->
-    <form method="POST" action="/add">
-        <input type="text" name="tag_id" placeholder="Tag ID" required>
-        <input type="text" name="song_name" placeholder="Song Name" required>
-        <button type="submit">Add Song</button>
-    </form>
+{% block title %}Audiobooks{% endblock %}
 
-    <!-- Liste der Songs -->
-    <ul>
-        {% for song in songs %}
-        <li>{{ song.tag_id }}: {{ song.song_name }}</li>
+{% block content %}
+  <div class="mb-10 text-right">
+    <div class="stats stats-horizontal shadow">
+
+      <div class="stat">
+        <div class="stat-title">Free</div>
+        <div class="stat-value">{{ freeSpace }}</div>
+        <div class="stat-desc">{{ freePercent }} %</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-title">Used</div>
+        <div class="stat-value">{{ usedSpace }}</div>
+        <div class="stat-desc">{{ usedPercent }} %</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-title">Total</div>
+        <div class="stat-value">{{ totalSpace }}</div>
+        <div class="stat-desc"></div>
+      </div>
+
+    </div>
+  </div>
+  <div class="overflow-x-auto border border-gray-200 md:rounded-lg">
+    <table class="table table-zebra">
+      <thead class="bg-gray-50">
+        <tr>
+          <th>Name</th>
+          <th>Size</th>
+          <th>Tag</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+          <tr>
+            <td>{{ item["name"] }}</td>
+            <td>{{ sizeof_fmt(item["size"], 'B') }}</td>
+            <td>
+              {% if item["tag"] is not none %}
+                <div class="badge badge-accent">{{ item["tag"] }}</div>
+              {% endif %}
+            </td>
+            <td>
+              {% if item["tag"] is not none %}
+                <a href="{{ url_for('play', tag=item['tag']) }}" class="btn btn-accent btn-xs">Play</a>
+                <a href="{{ url_for('play_from_start', tag=item['tag']) }}" class="btn btn-accent btn-xs">Play from Start</a>
+                <a href="{{ url_for('removeTag', tag=item['tag']) }}" class="btn btn-neutral btn-xs">Clear Tag</a>
+              {% else %}
+                <a href="{{ url_for('addTag', name=item['name']) }}" class="btn btn-neutral btn-xs">Add Tag</a>
+              {% endif %}
+            </td>
+          </tr>
         {% endfor %}
-    </ul>
-</body>
-</html>
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
