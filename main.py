@@ -34,11 +34,15 @@ def main():
 
     try:
         while True:
-            lcd.clear_message()
+            if not rfid.is_locked():
+                lcd.clear_message()
 
-            id = rfid.wait_for_tag(rfid_read_delay)
-            if id:
-                lcd.set_message("RFID gelesen:", f"{id}")
+                id = rfid.wait_for_tag(rfid_read_delay)
+                if id:
+                    lcd.set_message("RFID gelesen:", f"{id}")
+            else:
+                logging.getLogger('sp').info('RFID is locked. Waiting...')
+                time.sleep(rfid_read_delay)
 
             # do normal stuff here per tick
             lcd.do_tick()

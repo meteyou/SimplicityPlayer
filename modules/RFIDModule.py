@@ -11,6 +11,8 @@ class RFIDModule:
         self._polling_sleep = config.getfloat('RFIDModule', 'polling_sleep',
                                               fallback=0.5)
 
+        self._lock = False
+
     def get_tag(self):
         try:
             return self._reader.read_id_no_block()
@@ -27,3 +29,12 @@ class RFIDModule:
                 return id
             time.sleep(self._polling_sleep)
         return None
+
+    def is_locked(self):
+        return self._lock
+
+    def lock(self):
+        self._lock = True
+
+    def unlock(self):
+        self._lock = False
