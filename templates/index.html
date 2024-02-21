@@ -39,7 +39,7 @@
       <tbody>
         {% for item in items %}
           <tr>
-            <td>{{ item["name"] }}</td>
+            <td>{{ item["name"] }} - {{ item["tag"] }}</td>
             <td>{{ sizeof_fmt(item["size"], 'B') }}</td>
             <td>
               {% if item["tag"] is not none %}
@@ -47,12 +47,12 @@
               {% endif %}
             </td>
             <td>
+              <a href="{{ url_for('play', name=item['name']) }}" class="btn btn-accent btn-xs">Play</a>
+              <a href="{{ url_for('play_from_start', name=item['name']) }}" class="btn btn-accent btn-xs">Play from Start</a>
               {% if item["tag"] is not none %}
-                <a href="{{ url_for('play', tag=item['tag']) }}" class="btn btn-accent btn-xs">Play</a>
-                <a href="{{ url_for('play_from_start', tag=item['tag']) }}" class="btn btn-accent btn-xs">Play from Start</a>
-                <a href="{{ url_for('removeTag', tag=item['tag']) }}" class="btn btn-neutral btn-xs">Clear Tag</a>
+                <a href="{{ url_for('remove_tag', tag=item['tag']) }}" class="btn btn-neutral btn-xs">Clear Tag</a>
               {% else %}
-                <a href="{{ url_for('addTag', name=item['name']) }}" class="btn btn-neutral btn-xs">Add Tag</a>
+                <a href="{{ url_for('add_tag', name=item['name']) }}" class="btn btn-neutral btn-xs">Add Tag</a>
               {% endif %}
             </td>
           </tr>

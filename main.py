@@ -1,11 +1,11 @@
 import configparser
 import logging
+import time
 
 import RPi.GPIO as GPIO
 from modules.RFIDModule import RFIDModule
 from modules.LCDModule import LCDModule
-from modules.MPDModule import MPDModule
-#from modules.DatabaseModule import DatabaseModule
+from modules.TagManagerModule import TagManagerModule
 from modules.WebServerModule import WebServerModule
 from threading import Thread
 
@@ -14,6 +14,7 @@ def main():
     config.read('config.ini')
 
     logfile = config.get('DEFAULT', 'logfile', fallback='SimplicityPlayer.log')
+
     logging.basicConfig(filename=logfile,
                         format="%(asctime)s [%(module)s.%(funcName)s] %("
                                "levelname)s: %(message)s")
@@ -24,11 +25,11 @@ def main():
 
     rfid = RFIDModule(config)
     lcd = LCDModule(config)
-    #db = DatabaseModule(db_path='path_to_your_database.db')
+    tag_manager = TagManagerModule(config)
 
 
     # start the web server in a separate thread
-    web_server = WebServerModule(config)
+    web_server = WebServerModule(config, lcd, rfid, tag_manager)
     web_server_thread = Thread(target=web_server.run)
     web_server_thread.start()
 

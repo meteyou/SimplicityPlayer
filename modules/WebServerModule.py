@@ -1,9 +1,13 @@
+import logging
 import shutil
+import time
 from os import listdir, stat
 from os.path import join
 
 from flask import Flask, render_template, request, redirect, url_for, \
     send_from_directory
+
+from modules.MPDModule import MPDModule
 
 
 #from DatabaseModule import DatabaseModule
@@ -19,33 +23,39 @@ def sizeof_fmt(num, suffix="B"):
     return f"{num:.1f}Yi{suffix}"
 
 class WebServerModule:
-    def __init__(self, config):
+    def __init__(self, config, lcd, rfid, tag_manager):
         self._config = config
         self._host = config.get('WebServerModule', 'host', fallback='0.0.0.0')
         self._port = config.get('WebServerModule', 'port', fallback=5000)
         self._fileDirPath = config.get('WebServerModule', 'fileDirPath',
                                        fallback='/var/lib/mpd/music/')
 
+        self._lcd = lcd
+        self._rfid = rfid
+        self._tagManager = tag_manager
+        self._mpd = MPDModule(config)
+
         self.app = Flask(__name__, template_folder='../templates')
         # declare routes
         self.app.add_url_rule('/', 'index', self.index)
-        self.app.add_url_rule('/assets/<path:filepath>', 'assets', self.assets)
-        self.app.add_url_rule('/addTag/<name>', 'addTag', self.addTag)
-
-        #self.app.add_url_rule('/add', 'add_song', self.add_song, methods=['POST'])
-        #self.app.add_url_rule('/read_and_add', 'read_and_add', self.read_and_add, methods=['POST'])
+        self.app.add_url_rule('/assets/<path:filepath>', 'assets',
+                              self.assets)
+        self.app.add_url_rule('/add_tag/<name>', 'add_tag', self.add_tag)
+        self.app.add_url_rule('/remove_tag/<tag>', 'remove_tag',
+                              self.remove_tag)
+        self.app.add_url_rule('/play/<name>', 'play', self.play)
+        self.app.add_url_rule('/play_from_start/<name>', 'play_from_start',
+                              self.play)
 
     def run(self):
         self.app.run(host=self._host, port=self._port)
 
     def index(self):
-        #songs = db.get_all_songs()
-        items = []
         total, used, free = shutil.disk_usage(self._fileDirPath)
         usedPercent = round(used / total * 100, 0)
         freePercent = round(free / total * 100, 0)
         return render_template('index.html',
-                               items=self._getItems(),
+                               items=self._get_items(),
                                freePercent=freePercent,
                                usedPercent=usedPercent,
                                totalSpace=sizeof_fmt(total),
@@ -53,26 +63,53 @@ class WebServerModule:
                                usedSpace=sizeof_fmt(used),
                                sizeof_fmt=sizeof_fmt)
 
-    def _getItems(self, **k):
+    def _get_items(self, **k):
         currentFiles = sorted(listdir(self._fileDirPath))
-        tags = []
+        tags = self._tagManager.get_tags()
 
         filesTagArray = []
         for fileName in currentFiles:
             file_stats = stat(join(self._fileDirPath, fileName))
 
+            tag = None
+            for key, value in tags.items():
+                if value == fileName:
+                    tag = key
+
             filesTagArray.append({"name": fileName,
                                   "size": file_stats.st_size,
-                                  "tag": None})
-
+                                  "tag": tag})
 
         return filesTagArray
 
     def assets(self, filepath):
         return send_from_directory('../assets', filepath)
 
-    def addTag(self, name):
-        #tagActor.addTag(name)
+    def add_tag(self, name):
+        self._rfid.lock()
+        self._lcd.set_message("Bitte RFID-Tag", "vorhalten...")
+        tag_id = self._rfid.wait_for_tag(timeout=30)
+        if tag_id:
+            self._tagManager.add_tag(tag_id, name)
+            self._lcd.set_message("RFID erkannt", "und gespeichert!")
+            time.sleep(10)
+        else:
+            self._lcd.set_message("Zeit abgelaufen,", "kein RFID erkannt.")
+            time.sleep(5)
+
+        self._rfid.unlock()
+        return redirect(url_for('index'))
+
+    def remove_tag(self, tag):
+        self._tagManager.remove_tag(tag)
+        return redirect(url_for('index'))
+
+    def play(self, name):
+        self._mpd.play(name)
+        return redirect(url_for('index'))
+
+    def play_from_start(self, name):
+        self._mpd.play(name, 0)
         return redirect(url_for('index'))
 
 
