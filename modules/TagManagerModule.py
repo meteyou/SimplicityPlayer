@@ -9,32 +9,33 @@ class TagManagerModule:
         self._tagsFilePath = config.get('TagManagerModule', 'tagsFilePath',
                                         fallback='../data/tags.json')
 
-        self.tags = {}
+        self._tags = {}
         self.load_tags()
 
     def load_tags(self):
         try:
             with open(self._tagsFilePath, 'r') as tagsFile:
-                self.tags = json.load(tagsFile)
+                self._tags = json.load(tagsFile)
         except (IOError, ValueError) as e:
-            self.tags = {}
+            self._tags = {}
             logging.getLogger('sp').error(f'Unable to load tag file')
             logging.getLogger('sp').exception(e)
 
     def save_tags(self):
         with open(self._tagsFilePath, 'w') as tagsFile:
-            json.dump(self.tags, tagsFile)
+            json.dump(self._tags, tagsFile)
 
     def add_tag(self, tag, name):
-        self.tags[tag] = name
+        self._tags[str(tag)] = name
         self.save_tags()
 
     def remove_tag(self, tag):
-        del self.tags[tag]
-        self.save_tags()
+        if tag in self._tags:
+            del self._tags[tag]
+            self.save_tags()
 
     def get_tags(self):
-        return self.tags
+        return self._tags
 
     def get_tag(self, tag):
-        return self.tags[tag]
+        return self._tags[tag]
