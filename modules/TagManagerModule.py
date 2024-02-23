@@ -7,7 +7,7 @@ class TagManagerModule:
     def __init__(self, config):
         self._config = config
         self._tagsFilePath = config.get('TagManagerModule', 'tagsFilePath',
-                                        fallback='../data/tags.json')
+                                        fallback='data/tags.json')
 
         self._tags = {}
         self.load_tags()
