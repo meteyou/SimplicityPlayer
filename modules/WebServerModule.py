@@ -17,6 +17,7 @@ def sizeof_fmt(num, suffix="B"):
         num /= 1024.0
     return f"{num:.1f}Yi{suffix}"
 
+
 class WebServerModule:
     def __init__(self, config, lcd, rfid, tag_manager):
         self._config = config
