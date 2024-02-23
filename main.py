@@ -9,6 +9,7 @@ from modules.TagManagerModule import TagManagerModule
 from modules.WebServerModule import WebServerModule
 from threading import Thread
 
+
 def main():
     config = configparser.ConfigParser()
     config.read('config.ini')
@@ -26,7 +27,6 @@ def main():
     rfid = RFIDModule(config)
     lcd = LCDModule(config)
     tag_manager = TagManagerModule(config)
-
 
     # start the web server in a separate thread
     web_server = WebServerModule(config, lcd, rfid, tag_manager)
@@ -52,6 +52,7 @@ def main():
 
     logging.getLogger('sp').info('Stopping...')
     GPIO.cleanup()
+
 
 if __name__ == "__main__":
     main()
