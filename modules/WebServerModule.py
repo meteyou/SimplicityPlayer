@@ -4,15 +4,10 @@ import time
 from os import listdir, stat
 from os.path import join
 
-from flask import Flask, render_template, request, redirect, url_for, \
-    send_from_directory
+from flask import Flask, render_template, redirect, url_for, send_from_directory
 
 from modules.MPDModule import MPDModule
 
-
-#from DatabaseModule import DatabaseModule
-#from RFIDModule import RFIDModule
-#from LCDModule import LCDModule
 
 # size formatting from https://stackoverflow.com/a/1094933/1166086
 def sizeof_fmt(num, suffix="B"):
@@ -111,26 +106,3 @@ class WebServerModule:
     def play_from_start(self, name):
         self._mpd.play(name, 0)
         return redirect(url_for('index'))
-
-
-#db = DatabaseModule(db_path='path_to_your_database.db')
-#rfid = RFIDModule()
-
-# @app.route('/add', methods=['POST'])
-# def add_song():
-#     tag_id = request.form.get('tag_id')
-#     song_name = request.form.get('song_name')
-#     db.add_song(tag_id, song_name)
-#     return redirect(url_for('index'))
-
-# @app.route('/read_and_add', methods=['POST'])
-# def read_and_add():
-#     song_name = request.form.get('song_name')
-#     lcd.display_text("Bitte RFID-Tag vorhalten...")
-#     tag_id, _ = rfid.wait_for_card(timeout=30)
-#     if tag_id:
-#         db.add_song(tag_id, song_name)
-#         lcd.show_message("RFID erkannt und gespeichert!")
-#     else:
-#         lcd.show_message("Zeit abgelaufen, kein RFID erkannt.")
-#     return redirect(url_for('index'))
