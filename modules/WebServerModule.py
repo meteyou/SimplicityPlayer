@@ -22,7 +22,7 @@ class WebServerModule:
         self._config = config
         self._host = config.get('WebServerModule', 'host', fallback='0.0.0.0')
         self._port = config.get('WebServerModule', 'port', fallback=5000)
-        self._fileDirPath = config.get('WebServerModule', 'fileDirPath',
+        self._fileDirPath = config.get('DEFAULT', 'audiobooksPath',
                                        fallback='/var/lib/mpd/music/')
 
         self._lcd = lcd
