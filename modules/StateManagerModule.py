@@ -1,9 +1,8 @@
 import json
 import logging
-import os
 
 
-class TagManagerModule:
+class StateManagerModule:
     def __init__(self, config):
         self._config = config
         self._statesFilePath = config.get('StateManagerModule', 'statesFilePath',
