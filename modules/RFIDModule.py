@@ -26,7 +26,7 @@ class RFIDModule:
         while time.time() - start_time < timeout:
             id = self.get_tag()
             if id:
-                return id
+                return str(id)
             time.sleep(self._polling_sleep)
         return None
 
