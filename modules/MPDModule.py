@@ -47,6 +47,9 @@ class MPDModule:
                 # play from start, if trying to play too close from the end
                 elapsed = 0
 
+            if elapsed < 0:
+                elapsed = 0
+
             logging.getLogger('sp').info('Playing %s from %s' % (name, elapsed))
 
             self._client.seekcur(elapsed)

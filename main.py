@@ -38,19 +38,38 @@ def main():
     web_server_thread.start()
 
     last_state_store = time.time()
+    last_read_tag = None
 
     try:
         while True:
             if not rfid.is_locked():
                 lcd.clear_message()
 
-                id = rfid.wait_for_tag(rfid_read_delay)
-                if id:
-                    lcd.set_message("RFID gelesen:", f"{id}")
+                # read tag from RFID reader
+                tag = rfid.wait_for_tag(rfid_read_delay)
+
+                # if tag is not None and not the same as the last tag read
+                if tag and tag != last_read_tag:
+                    last_read_tag = tag
+
+                    # get the file name from the tag
+                    file_name = tag_manager.get_tag(tag)
+                    if file_name is not None:
+                        # get the elapsed time from the state manager
+                        elapsed = state_manager.get_elapsed(file_name)
+                        mpd.play(file_name, elapsed)
+                    else:
+                        lcd.set_message('Unbekannter Tag')
+
+                # if tag is the same as the last tag read
+                elif tag == last_read_tag:
+                    time.sleep(rfid_read_delay)
+
+            # if the RFID reader is locked
             else:
-                logging.getLogger('sp').info('RFID is locked. Waiting...')
                 time.sleep(rfid_read_delay)
 
+            # store the current state every 60 seconds
             state_time_diff = time.time() - last_state_store
             if state_time_diff > 60:
                 state_manager.set_current(mpd.get_song())

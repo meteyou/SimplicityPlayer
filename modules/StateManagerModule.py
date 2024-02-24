@@ -46,3 +46,10 @@ class StateManagerModule:
             return self._states[file_name]
 
         return None
+
+    def get_elapsed(self, file_name):
+        state = self.get_state(file_name)
+        if state is not None:
+            return state["elapsed"]
+
+        return 0
