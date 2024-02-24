@@ -37,4 +37,7 @@ class TagManagerModule:
         return self._tags
 
     def get_tag(self, tag):
-        return self._tags[tag]
+        if tag in self._tags:
+            return self._tags[tag]
+
+        return None
