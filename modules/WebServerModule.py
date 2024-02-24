@@ -19,7 +19,7 @@ def sizeof_fmt(num, suffix="B"):
 
 
 class WebServerModule:
-    def __init__(self, config, lcd, rfid, tag_manager):
+    def __init__(self, config, lcd, rfid, tag_manager, state_manager):
         self._config = config
         self._host = config.get('WebServerModule', 'host', fallback='0.0.0.0')
         self._port = config.get('WebServerModule', 'port', fallback=5000)
@@ -29,6 +29,7 @@ class WebServerModule:
         self._lcd = lcd
         self._rfid = rfid
         self._tagManager = tag_manager
+        self._stateManager = state_manager
         self._mpd = MPDModule(config)
 
         self.app = Flask(__name__, template_folder='../templates')
@@ -62,6 +63,7 @@ class WebServerModule:
     def _get_items(self, **k):
         currentFiles = sorted(listdir(self._fileDirPath))
         tags = self._tagManager.get_tags()
+        states = self._stateManager.get_states()
 
         filesTagArray = []
         for fileName in currentFiles:
@@ -72,9 +74,14 @@ class WebServerModule:
                 if value == fileName:
                     tag = key
 
+            state = None
+            if fileName in states:
+                state = states[fileName]
+
             filesTagArray.append({"name": fileName,
                                   "size": file_stats.st_size,
-                                  "tag": tag})
+                                  "tag": tag,
+                                  "state": state})
 
         return filesTagArray
 
@@ -101,7 +108,13 @@ class WebServerModule:
         return redirect(url_for('index'))
 
     def play(self, name):
-        self._mpd.play(name)
+        elapsed = 0
+
+        state = self._stateManager.get_state(name)
+        if state is not None:
+            elapsed = state['elapsed']
+
+        self._mpd.play(name, elapsed)
         return redirect(url_for('index'))
 
     def play_from_start(self, name):
