@@ -29,7 +29,20 @@ class StateManagerModule:
             json.dump({'current': self._current, 'states': self._states},
                       statesFile)
 
-    def get_tag(self, file_name):
+    def set_current(self, current):
+        if self._current == current or current is None:
+            return
+
+        logging.getLogger('sp').info(f'Writing current state to file.')
+        self._current = current
+        self._states[current["name"]] = {"elapsed": current["elapsed"],
+                                         "duration": current["duration"]}
+        self.save_states()
+
+    def get_states(self):
+        return self._states
+
+    def get_state(self, file_name):
         if file_name in self._states:
             return self._states[file_name]
 

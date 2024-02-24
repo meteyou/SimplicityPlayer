@@ -2,12 +2,12 @@ from RPLCD.i2c import CharLCD
 from modules.MPDModule import MPDModule
 
 class LCDModule:
-    def __init__(self, config):
+    def __init__(self, config, mpd):
         self._config = config
         self._lcd = CharLCD('PCF8574', 0x27, auto_linebreaks=False)
         self.clear()
 
-        self._mpd = MPDModule(config)
+        self._mpd = mpd
 
         self._message_1 = None
         self._message_2 = None
