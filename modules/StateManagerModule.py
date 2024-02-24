@@ -33,7 +33,6 @@ class StateManagerModule:
         if self._current == current or current is None:
             return
 
-        logging.getLogger('sp').info(f'Writing current state to file.')
         self._current = current
         self._states[current["name"]] = {"elapsed": current["elapsed"],
                                          "duration": current["duration"]}
