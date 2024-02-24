@@ -62,7 +62,12 @@ def main():
                         lcd.set_message('Unbekannter Tag')
 
                 # if tag is the same as the last tag read
-                elif tag == last_read_tag:
+                elif tag and tag == last_read_tag:
+                    time.sleep(rfid_read_delay)
+
+                # if tag is None, reset the last read tag
+                elif not tag:
+                    last_read_tag = None
                     time.sleep(rfid_read_delay)
 
             # if the RFID reader is locked
