@@ -68,7 +68,6 @@ def main():
                 # if tag is None, reset the last read tag
                 elif not tag:
                     last_read_tag = None
-                    time.sleep(rfid_read_delay)
 
             # if the RFID reader is locked
             else:
