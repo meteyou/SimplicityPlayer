@@ -1,0 +1,13 @@
+[Unit]
+Description=SimplicityPlayer
+After=mpd.service
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/SimplicityPlayer
+ExecStart=/home/pi/SimplicityPlayer-env/bin/python main.py
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target
