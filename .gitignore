@@ -164,3 +164,6 @@ SimplicityPlayer.log
 
 # exclude data folder content
 data/*
+
+# exclude example config
+config.ini.example
