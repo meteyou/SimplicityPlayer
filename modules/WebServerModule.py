@@ -95,7 +95,7 @@ class WebServerModule:
         if tag_id:
             self._tagManager.add_tag(tag_id, name)
             self._lcd.set_message("RFID erkannt", "und gespeichert!")
-            time.sleep(10)
+            time.sleep(5)
         else:
             self._lcd.set_message("Zeit abgelaufen,", "kein RFID erkannt.")
             time.sleep(5)
