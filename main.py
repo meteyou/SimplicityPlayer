@@ -8,6 +8,7 @@ from modules.LCDModule import LCDModule
 from modules.MPDModule import MPDModule
 from modules.StateManagerModule import StateManagerModule
 from modules.TagManagerModule import TagManagerModule
+from modules.USBModule import USBModule
 from modules.WebServerModule import WebServerModule
 from threading import Thread
 
@@ -29,6 +30,7 @@ def main():
     mpd = MPDModule(config)
     rfid = RFIDModule(config)
     lcd = LCDModule(config, mpd)
+    usb = USBModule(config, lcd, mpd)
     tag_manager = TagManagerModule(config)
     state_manager = StateManagerModule(config)
 
@@ -51,7 +53,7 @@ def main():
 
     try:
         while True:
-            if not rfid.is_locked():
+            if not rfid.is_locked() and not usb.is_working():
                 lcd.clear_message()
 
                 # read tag from RFID reader
@@ -87,6 +89,10 @@ def main():
             if state_time_diff > 60:
                 state_manager.set_current(mpd.get_song())
                 last_state_store = time.time()
+
+            # check if a USB stick is inserted
+            if not usb.is_working() and usb.exists():
+                usb.copy_files()
 
             # do normal stuff here per tick
             lcd.do_tick()

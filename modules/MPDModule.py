@@ -68,3 +68,6 @@ class MPDModule:
             self.pause()
         else:
             self.play(self.get_song()['name'], self.get_song()['elapsed'])
+
+    def update(self):
+        self._client.update()
