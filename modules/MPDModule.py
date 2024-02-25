@@ -61,3 +61,10 @@ class MPDModule:
 
     def pause(self):
         self._client.pause()
+
+    def toggle_playback(self):
+        state = self.get_state()
+        if state == 'play':
+            self.pause()
+        else:
+            self.play(self.get_song()['name'], self.get_song()['elapsed'])

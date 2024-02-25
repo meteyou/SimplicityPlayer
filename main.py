@@ -32,6 +32,15 @@ def main():
     tag_manager = TagManagerModule(config)
     state_manager = StateManagerModule(config)
 
+    def button_callback(_):
+        mpd.toggle_playback()
+
+    GPIO.setwarnings(False)
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(16, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.add_event_detect(16, GPIO.FALLING, callback=button_callback,
+                          bouncetime=800)
+
     # start the web server in a separate thread
     web_server = WebServerModule(config, lcd, rfid, tag_manager, state_manager)
     web_server_thread = Thread(target=web_server.run)
@@ -66,7 +75,7 @@ def main():
                     time.sleep(rfid_read_delay)
 
                 # if tag is None, reset the last read tag
-                elif not tag:
+                elif tag is None and last_read_tag is not None:
                     last_read_tag = None
 
             # if the RFID reader is locked
