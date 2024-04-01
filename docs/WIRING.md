@@ -28,3 +28,7 @@ Resistor. The wiring is as follows:
 (There was no cherry MX button in the Fritzing library, so I used a normal
 button and I don't know how to change the resistor value in Fritzing, so I used
 a default 220 Ohm resistor instead of the 4k7 Ohm resistor)
+
+## Final Wiring
+After wiring all components, the final wiring should look like this:
+![final wiring](img/simplicityPlayer-open.jpg)
