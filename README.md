@@ -49,6 +49,9 @@ audio media management.
 - Filament for 3D printing (I used ABS, all other filament types should work as
 well)
 
+## Wiring
+The wiring guide can be found in this repository's `docs/WIRING.md` file.
+
 ## Installation
 The installation guide can be found in this repository's `INSTALL.md` file.
 
