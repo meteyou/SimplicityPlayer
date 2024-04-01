@@ -61,7 +61,7 @@ The installation guide can be found in this repository's
 Your contribution to this project is warmly welcomed! Whether you want to
 contribute code, report bugs, or suggest improvements, every bit of help is
 valuable in making the SimplicityPlayer better and more accessible to everyone.
-Please see the `CONTRIBUTING.md` file for more information.  
+Please see the [CONTRIBUTING.md](CONTRIBUTING.md) file for more information.  
   
 I hope the SimplicityPlayer brings you or your loved ones as joy as it has
 brought my grandmother and me.
