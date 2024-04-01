@@ -54,7 +54,8 @@ The wiring guide can be found in this repository's
 [docs/WIRING.md](docs/WIRING.md) file.
 
 ## Installation
-The installation guide can be found in this repository's `INSTALL.md` file.
+The installation guide can be found in this repository's
+[docs/INSTALL.md](docs/INSTALL.md) file.
 
 ### Contribution
 Your contribution to this project is warmly welcomed! Whether you want to
