@@ -5,7 +5,7 @@ enjoy reading – one of her lifelong passions. To make her daily life more
 enjoyable and to make accessing audiobooks as easy as possible for her, I
 developed the SimplicityPlayer.
 
-![Simplicity-Player](docs/img/simplicityplayer-finished.jpg)
+![Simplicity-Player](docs/img/simplicityPlayer-finished.jpg)
   
 The SimplicityPlayer is a user-friendly audiobook player explicitly designed to
 allow people with visual impairments to operate it easily. It utilizes a
