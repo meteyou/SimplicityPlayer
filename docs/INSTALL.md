@@ -27,11 +27,11 @@ Before you start, make sure you have the following components ready:
    sudo raspi-config
    ```
    - Select `3 Interfacing Options`.
-   - Select `I3 SPI`.
+   - Select `I4 SPI`.
    - `Would you like the SPI interface to be enabled?` -> `Yes`
    - The SPI interface is now enabled.
    - Select `3 Interfacing Options`.
-   - Select `I4 I2C`.
+   - Select `I5 I2C`.
    - `Would you like the ARM I2C interface to be enabled?` -> `Yes`
    - The ARM I2C interface is now enabled.
    - Select `Finish`.
