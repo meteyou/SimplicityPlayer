@@ -26,6 +26,7 @@ def main():
     logging.getLogger('sp').info('Starting...')
 
     rfid_read_delay = config.getint('DEFAULT', 'rfid_read_delay', fallback=2)
+    toggle_button_pin = config.getint('DEFAULT', 'toggleButtonPin', fallback=None)
 
     mpd = MPDModule(config)
     rfid = RFIDModule(config)
@@ -37,18 +38,19 @@ def main():
     def button_callback(_):
         mpd.toggle_playback()
 
-    GPIO.setwarnings(False)
-    GPIO.setmode(GPIO.BOARD)
-    GPIO.setup(16, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    if toggle_button_pin is not None:
+        GPIO.setwarnings(False)
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setup(toggle_button_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
-    try:
-        GPIO.add_event_detect(16, GPIO.FALLING, callback=button_callback,
-                              bouncetime=800)
-    except RuntimeError as e:
-        GPIO.cleanup()
-        logging.getLogger('sp').error('Failed to add edge detection')
-        logging.getLogger('sp').error(e)
-        return
+        try:
+            GPIO.add_event_detect(toggle_button_pin, GPIO.FALLING,
+                                  callback=button_callback, bouncetime=800)
+        except RuntimeError as e:
+            GPIO.cleanup()
+            logging.getLogger('sp').error('Failed to add edge detection')
+            logging.getLogger('sp').error(e)
+            return
 
     # start the web server in a separate thread
     web_server = WebServerModule(config, lcd, rfid, tag_manager, state_manager)

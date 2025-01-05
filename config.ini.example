@@ -2,6 +2,7 @@
 logfile = SimplicityPlayer.log
 rfid_read_delay = 2
 audiobooksPath = /var/lib/mpd/music
+toggle_button_pin = 16
 
 [LCDModule]
 enabled = true
