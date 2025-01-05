@@ -165,9 +165,9 @@ Before you start, make sure you have the following components ready:
    virtualenv -p python3 ./SimplicityPlayer-env
    ./SimplicityPlayer-env/bin/pip install -r ./SimplicityPlayer/requirements.txt
    ```
-4. Copy config.cfg.example to config.cfg by running:
+4. Copy config.ini.example to config.ini by running:
    ```bash
-   cp ~/SimplicityPlayer/config.cfg.example ~/SimplicityPlayer/config.cfg
+   cp ~/SimplicityPlayer/config.ini.example ~/SimplicityPlayer/config.ini
    ```
 5. Copy the systemd service file by running:
    ```bash
