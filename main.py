@@ -40,8 +40,14 @@ def main():
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(16, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-    GPIO.add_event_detect(16, GPIO.FALLING, callback=button_callback,
-                          bouncetime=800)
+
+    try:
+        GPIO.add_event_detect(16, GPIO.FALLING, callback=button_callback,
+                              bouncetime=800)
+    except RuntimeError as e:
+        logging.getLogger('sp').error('Failed to add edge detection')
+        logging.getLogger('sp').error(e)
+        return
 
     # start the web server in a separate thread
     web_server = WebServerModule(config, lcd, rfid, tag_manager, state_manager)
