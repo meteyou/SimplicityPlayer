@@ -45,6 +45,7 @@ def main():
         GPIO.add_event_detect(16, GPIO.FALLING, callback=button_callback,
                               bouncetime=800)
     except RuntimeError as e:
+        GPIO.cleanup()
         logging.getLogger('sp').error('Failed to add edge detection')
         logging.getLogger('sp').error(e)
         return
