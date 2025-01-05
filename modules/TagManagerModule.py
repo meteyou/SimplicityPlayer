@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 
 
 class TagManagerModule:
@@ -12,6 +13,10 @@ class TagManagerModule:
         self.load_tags()
 
     def load_tags(self):
+        # Create the file if it does not exist
+        if not os.path.exists(self._tagsFilePath):
+            self.save_tags()
+
         try:
             with open(self._tagsFilePath, 'r') as tagsFile:
                 self._tags = json.load(tagsFile)
@@ -21,6 +26,9 @@ class TagManagerModule:
             logging.getLogger('sp').exception(e)
 
     def save_tags(self):
+        # Create the directory if it does not exist
+        os.makedirs(os.path.dirname(self._tagsFilePath), exist_ok=True)
+
         with open(self._tagsFilePath, 'w') as tagsFile:
             json.dump(self._tags, tagsFile)
 
