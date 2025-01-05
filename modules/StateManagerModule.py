@@ -14,6 +14,7 @@ class StateManagerModule:
         self.load_states()
 
     def load_states(self):
+        # Create the file if it does not exist
         if not os.path.exists(self._statesFilePath):
             self.save_states()
 
@@ -29,6 +30,9 @@ class StateManagerModule:
             logging.getLogger('sp').exception(e)
 
     def save_states(self):
+        # Create the directory if it does not exist
+        os.makedirs(os.path.dirname(self._statesFilePath), exist_ok=True)
+
         with open(self._statesFilePath, 'w') as statesFile:
             json.dump({'current': self._current, 'states': self._states},
                       statesFile)
