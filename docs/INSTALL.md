@@ -113,8 +113,9 @@ Before you start, make sure you have the following components ready:
    ```
    change the `device "hw:2,0"` to the device number you found in step 2.
 4. Save the file by pressing `Ctrl + X`, then `Y`, and finally `Enter`.
-5. Restart MPD by running:
+5. Enable and restart MPD service by running:
    ```bash
+   sudo systemctl enable mpd
    sudo systemctl restart mpd
    ```
 ## Step 5: Install automount for USB drives
