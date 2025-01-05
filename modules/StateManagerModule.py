@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 
 
 class StateManagerModule:
@@ -13,6 +14,9 @@ class StateManagerModule:
         self.load_states()
 
     def load_states(self):
+        if not os.path.exists(self._statesFilePath):
+            self.save_states()
+
         try:
             with open(self._statesFilePath, 'r') as statesFile:
                 tmp = json.load(statesFile)
