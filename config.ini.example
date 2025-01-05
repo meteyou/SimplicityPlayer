@@ -3,6 +3,9 @@ logfile = SimplicityPlayer.log
 rfid_read_delay = 2
 audiobooksPath = /var/lib/mpd/music
 
+[LCDModule]
+enabled = true
+
 [MPDModule]
 host = localhost
 port = 6600

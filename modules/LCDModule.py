@@ -1,19 +1,26 @@
 from RPLCD.i2c import CharLCD
 from modules.MPDModule import MPDModule
+import logging
 
 class LCDModule:
     def __init__(self, config, mpd):
         self._config = config
-        self._lcd = CharLCD('PCF8574', 0x27, auto_linebreaks=False)
-        self.clear()
 
+        self._enabled = self._config.getboolean('LCDModule', 'enabled', fallback=True)
         self._mpd = mpd
+
+        if self._enabled:
+            self._lcd = CharLCD(i2c_expander='PCF8574', address=0x27,
+                                auto_linebreaks=False)
+            self.clear()
 
         self._message_1 = None
         self._message_2 = None
         self._textPosition = 0
 
     def do_tick(self):
+        if not self._enabled:
+            return
 
         # if there is a message, display it
         if self._message_1 is not None or self._message_2 is not None:
@@ -57,11 +64,15 @@ class LCDModule:
             self._lcd.write_string(namesplits[self._textPosition])
 
     def clear(self):
-        self._lcd.clear()
+        if self._enabled:
+            self._lcd.clear()
 
     def set_message(self, message_1, message_2=None):
         self._message_1 = message_1
         self._message_2 = message_2
+
+        if not self._enabled:
+            logging.getLogger('sp').info(f'LCD: {message_1}, {message_2}')
 
     def clear_message(self):
         self._message_1 = None
