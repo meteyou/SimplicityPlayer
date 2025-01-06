@@ -26,7 +26,8 @@ def main():
     logging.getLogger('sp').info('Starting...')
 
     rfid_read_delay = config.getint('DEFAULT', 'rfid_read_delay', fallback=2)
-    toggle_button_pin = config.getint('DEFAULT', 'toggleButtonPin', fallback=None)
+    toggle_button_pin = config.getint('DEFAULT', 'toggle_button_pin',
+                                      fallback=None)
 
     mpd = MPDModule(config)
     rfid = RFIDModule(config)
